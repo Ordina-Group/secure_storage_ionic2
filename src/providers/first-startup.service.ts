@@ -14,27 +14,33 @@ export class FirstStartupService {
     }
 
     public isFirstStartup(): Promise<boolean> {
-        /**
-         * Check whether this is the first startup of the app ever.
-         * This is necessary to run the db-schema creation logic
-         * 
-         * 1. Create and return a new Promise using the constructor that takes a function (resolve, reject) => {}
-         * 2. Get an instance of our databaseConnection through the _dbConnectionHolder.getInstance() function which returns a promise with the resolved db connection
-         * 3. execute the DbQueries.DB_INITIALIZED_QUERY query using the executeSql function on our db connection object
-         * 4. Resolve the promise with true or false depending on the result of the query
-         */
-        return Promise.resolve(true);
+        return new Promise((resolve, reject) => {
+            this._dbConnectionHolder.getInstance().then((db: any) => {
+                db.executeSql(DbQueries.DB_INITIALIZED_QUERY, {}, (rs) => {
+                    let name: string = undefined;
+
+                    if (rs.rows!.length! > 0) {
+                        name = rs.rows.item(0).name;
+                    }
+
+                    resolve(name === null || typeof name === 'undefined');
+                });
+            });
+        });
     }
 
     public createDatabase(): Promise<any> {
-        /**
-         * Create the database schema
-         * 
-         * 1. Create and return a new Promise using the constructor that takes a function (resolve, reject) => {}
-         * 2. Get an instance of our databaseConnection through the _dbConnectionHolder.getInstance() function which returns a promise with the resolved db connection
-         * 3. execute the DbSchema queries all at once using the sqlBatch function
-         * 4. Resolve or reject the promise without any data depending on the result of our queries
-         */
-        return Promise.resolve();
+        return new Promise((resolve, reject) => {
+            this._dbConnectionHolder.getInstance()
+                .then((db: any) => {
+                    return db.sqlBatch([
+                        DbSchema.CREATE_TABLE_DB_VERSION,
+                        DbSchema.CREATE_TABLE_PATIENT,
+                        DbSchema.CREATE_TABLE_MEDICAL_CONSULTATION
+                    ],
+                    () => resolve(),
+                    (error) => reject());
+                });
+        });
     }
 }

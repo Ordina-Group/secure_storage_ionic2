@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Platform } from 'ionic-angular';
 
+declare let sqlitePlugin:any;
+
 @Injectable()
 export class DatabaseConnectionHolder {
+    private _db: any;
     private _platform: Platform;
 
     constructor(platform:Platform) {
@@ -14,12 +17,24 @@ export class DatabaseConnectionHolder {
     }
 
     public getInstance(): Promise<any> {
-        /**
-         * Replace this line with the database creation logic.
-         *  
-         * 1. Create and return a new Promise using the constructor that takes a function (resolve, reject) => {}
-         * 2. Create/Open a database using the sqlitePlugin openDatabase function (Don't forget the key property!)
-         */
-        return Promise.resolve();
+        return new Promise((resolve, reject) => {
+            if (this._db === null || typeof this._db === 'undefined') {
+                sqlitePlugin.openDatabase({
+                    name: 'sensitiveData.db', 
+                    key: 'password',
+                    location: 'default'
+                }, 
+                (db) => {
+                    this._db = db;
+                    resolve(this._db);
+                }, 
+                (error) => {
+                    console.log('Error occured while creating database...' + error);
+                    throw(error);
+                });
+            } else {
+                resolve(this._db);
+            }
+        });    
     }
 }
