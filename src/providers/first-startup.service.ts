@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { DatabaseConnectionHolder } from './database-connection.holder';
 import { DbSchema } from './db-schema';
 import { DbQueries } from './db-queries';
+import { MedicalConsultation, Patient } from '../model';
 
 @Injectable()
 export class FirstStartupService {
@@ -37,6 +38,20 @@ export class FirstStartupService {
                         DbSchema.CREATE_TABLE_DB_VERSION,
                         DbSchema.CREATE_TABLE_PATIENT,
                         DbSchema.CREATE_TABLE_MEDICAL_CONSULTATION
+                    ],
+                    () => resolve(),
+                    (error) => reject());
+                });
+        });
+    }
+
+    public insertDummyData(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this._dbConnectionHolder.getInstance()
+                .then((db:any) => {
+                    return db.sqlBatch([
+                        DbQueries.INSERT_PATIENT_QUERY,
+                        DbQueries.INSERT_MEDICAL_CONSULTATION_QUERY
                     ],
                     () => resolve(),
                     (error) => reject());

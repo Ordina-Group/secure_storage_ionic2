@@ -2,16 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
-import { HomePage } from '../pages/home/home';
-
 import { FirstStartupService } from '../providers';
 
+import { PatientPage } from '../pages/patient';
 
 @Component({
   template: `<ion-nav [root]="rootPage"></ion-nav>`
 })
 export class MyApp implements OnInit {
-  rootPage = HomePage;
+  rootPage = PatientPage;
 
   private _platform: Platform;
   private _firstStartupService: FirstStartupService;
@@ -38,11 +37,16 @@ export class MyApp implements OnInit {
       this._firstStartupService.isFirstStartup()
           .then((isFirstStartup: boolean) => {
               if(isFirstStartup) {
-                  return this._firstStartupService.createDatabase();
+                  this._firstStartupService.createDatabase();
               }
+
+              return Promise.resolve(isFirstStartup);
           })
-          .then(() => {
+          .then((isFirstStartup: boolean) => {
               console.log('Database successfully created');
+              
+              console.log('dummyData inserted' + isFirstStartup);
+              this._firstStartupService.insertDummyData();
           });
 
     });

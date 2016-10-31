@@ -1,15 +1,22 @@
 import { NgModule } from '@angular/core';
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
+import { PatientPage } from '../pages/patient/patient';
+import { MedicalConsultationPage } from '../pages/medical-consultation/medical-consultation';
 
-import { DatabaseConnectionHolder, FirstStartupService } from '../providers';
+import { 
+  DatabaseConnectionHolder, 
+  FirstStartupService,
+  PatientService 
+} from '../providers';
+
 import '../providers/rx-operators';
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    PatientPage,
+    MedicalConsultationPage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -17,11 +24,13 @@ import '../providers/rx-operators';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    PatientPage,
+    MedicalConsultationPage
   ],
   providers: [
     DatabaseConnectionHolder,
-    FirstStartupService
+    FirstStartupService,
+    PatientService
   ]
 })
 export class AppModule {}
