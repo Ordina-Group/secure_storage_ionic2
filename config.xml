@@ -30,4 +30,5 @@
   <feature name="StatusBar">
     <param name="ios-package" onload="true" value="CDVStatusBar"/>
   </feature>
+  <plugin name="cordova-sqlcipher-adapter" spec="~0.1.8"/>
 </widget>
