@@ -30,14 +30,11 @@ export class PatientPage implements OnInit {
     }
 
   public ngOnInit() {
-      /**
-       * Call the patientService and initialize the patients Array.
-       * 
-       * 1. Call patientService#getAllPatients
-       * 2. subscribe to the resulting observable and initialize the patients Array.
-       */
-
-      this.patients = new Array;
+      this._patientService.getAllPatients()
+          .toArray()
+          .subscribe((patients) => {
+              this.patients = patients;
+          });
   }
 
   public ionViewDidLoad() {

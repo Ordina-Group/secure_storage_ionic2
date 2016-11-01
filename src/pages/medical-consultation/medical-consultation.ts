@@ -35,14 +35,12 @@ export class MedicalConsultationPage implements OnInit {
   }
 
   public ngOnInit() {
-      /**
-       * Call the patientService and initialize the medicalConsultations Array.
-       * 
-       * 1. Call patientService#getMedicalConsultationsByPatient and supply the patient we've received through the NavParams (See constructor)
-       * 2. subscribe to the resulting observable and initialize the medicalConsultations Array.
-       */
-
-      this.medicalConsultations = new Array;
+    
+      this._patientService.getMedicalConsultationsByPatient(this._patient)
+          .toArray()
+          .subscribe((allMedicalConsultations) => {
+              this.medicalConsultations = allMedicalConsultations;
+          });
   }
 
 }
