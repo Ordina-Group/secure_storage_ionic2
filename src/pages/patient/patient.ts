@@ -4,6 +4,8 @@ import { NavController } from 'ionic-angular';
 import { Patient } from '../../model';
 import { PatientService } from '../../providers';
 
+import { MedicalConsultationPage } from '../medical-consultation';
+
 /*
   Generated class for the Patient page.
 
@@ -28,11 +30,14 @@ export class PatientPage implements OnInit {
     }
 
   public ngOnInit() {
-    this._patientService.getAllPatients()
-        .toArray()
-        .subscribe((patients) => {
-          this.patients = patients;
-        })
+      /**
+       * Call the patientService and initialize the patients Array.
+       * 
+       * 1. Call patientService#getAllPatients
+       * 2. subscribe to the resulting observable and initialize the patients Array.
+       */
+
+      this.patients = new Array;
   }
 
   public ionViewDidLoad() {
@@ -41,6 +46,7 @@ export class PatientPage implements OnInit {
 
   public patientSelected(patient: Patient):void {
     console.log('Selected a patient: ' + JSON.stringify(patient));
+    this._navCtrl.push(MedicalConsultationPage, { 'patient': patient });
   }
 
 }

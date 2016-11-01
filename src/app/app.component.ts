@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Platform } from 'ionic-angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Platform, NavController } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
 import { FirstStartupService } from '../providers';
@@ -7,10 +7,10 @@ import { FirstStartupService } from '../providers';
 import { PatientPage } from '../pages/patient';
 
 @Component({
-  template: `<ion-nav [root]="rootPage"></ion-nav>`
+  template: `<ion-nav #mycontent></ion-nav>`
 })
 export class MyApp implements OnInit {
-  rootPage = PatientPage;
+  @ViewChild('mycontent') public nav: NavController;
 
   private _platform: Platform;
   private _firstStartupService: FirstStartupService;
@@ -43,10 +43,12 @@ export class MyApp implements OnInit {
               return Promise.resolve(isFirstStartup);
           })
           .then((isFirstStartup: boolean) => {
-              console.log('Database successfully created');
-              
-              console.log('dummyData inserted' + isFirstStartup);
-              this._firstStartupService.insertDummyData();
+              if(isFirstStartup) {
+                  this._firstStartupService.insertDummyData();
+              }
+          })
+          .then(() => {
+              this.nav.setRoot(PatientPage);
           });
 
     });

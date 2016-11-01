@@ -11,10 +11,10 @@ export class MedicalConsultation {
         this._medicalConsultationId = medicalConsultationId;
     }
 
-    public get decription(): string {
+    public get description(): string {
         return this._description;
     }
-    public set decription(description: string) {
+    public set description(description: string) {
         this._description = description;
     }
 
