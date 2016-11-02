@@ -75,31 +75,47 @@ export class DatabaseConnectionHolder {
          * 3. resolve and reject in the success and error callbacks respectively
          * 
          */
-        return Promise.resolve();
+
+        return new Promise((resolve, reject) => {
+            this._secureStorage = new SecureStorage(
+                () => {
+                    console.log('succesfully created secureStorage');
+                    resolve();
+                },
+                (error) => {
+                    console.log('Error creating secureStorage: ' + error)
+                    reject();
+                },
+                'sensitive_data'
+            );
+        });
     }
 
     private getExistingDatabasePassword(): Promise<string> {
-        /**
-         * implement the getExistingDatabasePassword function.
-         * 
-         * 1. Create a promise using the constructor that takes an (reject, resolve) => {} arrow function
-         * 2. Perform a get from the previously created SecureStorage object.
-         * 3. resolve the password in the success and error callbacks respectively. In the callback, resolve undefined.
-         */
-        
-        return Promise.resolve("password");
+        return new Promise((resolve, reject) => {
+            this._secureStorage.get(
+                (value) => {
+                    console.log('succesfully retrieved db_password from secureStorage: ' + value);
+                    resolve(value);
+                },
+                (error) => {
+                    console.log('Error retrieving value from secureStorage: ' + error);
+                    resolve(undefined);
+                },
+                'db_password'
+            );
+        });
     }
 
     private setDatabasePassword(databasePassword: string): void {
-        /**
-         * implement the setDatabasePassword function.
-         * 
-         * 1. Call set on the previously created SecureStorage object
-         */
-
+        this._secureStorage.set(
+            () => console.log('succesfully set db_password in secureStorage'),
+            (error) => console.log('Error setting db_password secureStorage: ' + error),
+            'db_password', databasePassword
+        );
     }
 
-    //createRandomIdentifier function creates a random base64 password using sjcl (Stanford Javascript Crypto Library).
+    //createRandomIdentifier function creates a random base64 44-character password using sjcl (Stanford Javascript Crypto Library).
     private createRandomIdentifier(): string {
         //Generate randomWords (8 x 4 bytes = 256 bit)
         let words = this._randomGenerator.randomWords(8);
