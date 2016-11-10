@@ -61,3 +61,4 @@ This will be solved in exercise 2.
 ## Exercise 2
 
 In exercise 2, our focus will be on retrieving medical data from the database and displaying it in our ionic app.
+We'll be implementing 
